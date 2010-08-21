@@ -1,7 +1,4 @@
 #!/usr/bin/env perl
-
-package main;
-
 my $cron = AnyEvent::Cron->new( verbose => 1 );
 
 # 00:00 (hour:minute)
@@ -49,4 +46,3 @@ $cron->add({
 
 my $cv = AnyEvent->condvar;
 $cv->recv;
-
