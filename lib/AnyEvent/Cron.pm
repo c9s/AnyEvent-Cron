@@ -26,7 +26,7 @@ has debug =>
 has ignore_floating =>
     ( is => 'rw',  isa => 'Bool' , default => sub { 0 } );
 
-
+use Scalar::Util qw(refaddr);
 
 sub create_interval_event {
     my $self = shift;
@@ -36,19 +36,31 @@ sub create_interval_event {
         type      => 'interval',
         triggered => 0,
         };
+    $ref->{name} ||= 'interval-' . refaddr($ref);
+    print "hook interval on: "
+            , join( ':', grep {$_} map { $ref->{$_} } qw(hour minute second) ) 
+            , "\n" 
+            if $self->verbose;
     push @{ $self->events }, $ref;
+}
+
+sub delete {
+    my $self = shift;
+    my $name = shift;
+    my @events = @{ $self->events };
+    $self->events( [ grep { $_->{name} ne $name } @{ $self->events } ] );
 }
 
 sub create_datatime_event {
     my ( $self, $dt, $cb ) = @_;
-    push @{ $self->events } , {
-        type => 'datetime',
+    push @{ $self->events }, {
+        type      => 'datetime',
         triggered => 0,
-        datetime => $dt,
-        callback => $cb,
+        datetime  => $dt,
+        callback  => $cb,
+        name      => 'datetime-'. refaddr($cb),
     };
 }
-
 
 sub add {
     my $self = shift;
@@ -60,15 +72,37 @@ sub add {
         # hour:minute
         if ( $ts_string =~ m{^(\d+):(\d+)$} ) {
             my ( $hour, $minute ) = ( $1, $2 );
-            print "hook interval on: $hour $minute" if $self->verbose;
             $self->create_interval_event( {
                     hour     => $hour,
                     minute   => $minute,
                     callback => $cb,
             } );
         }
+        elsif( $ts_string =~ m{^(\d+):(\d+):(\d+)$} ) {
+            my ( $hour, $minute ,$second ) = ( $1, $2 , $3 );
+            print "hook interval on: $hour $minute $second" if $self->verbose;
+            $self->create_interval_event( {
+                    hour     => $hour,
+                    minute   => $minute,
+                    second   => $second,
+                    callback => $cb,
+            });
+        }
+        elsif( $ts_string =~ m{(\d+):\*:\*} ) {
+            my $hour = $1;
+            $self->create_interval_event( { hour => $hour, callback => $cb } );
+        }
+        elsif( $ts_string =~ m{\*:(\d+):\*} ) {
+            my $minute = $1;
+            $self->create_interval_event( { minute => $minute, callback => $cb } );
+        }
+        elsif( $ts_string =~ m{\*:\*:(\d+)} ) {
+            my $second = $1;
+            $self->create_interval_event( { second => $second, callback => $cb } );
+        }
         else {
-            die 'time string format is not supported.';
+            warn 'time string format is not supported.';
+            return;
         }
     }
     elsif( ref($_[0]) eq 'DateTime' && ref($_[1]) eq 'CODE' ) {
@@ -98,6 +132,7 @@ sub _check_interval {
 sub _call_event {
     my ( $self, $e, $dt ) = @_;
     unless ( $e->{triggered} ) {
+        print $e->{name} . " triggered\n" if $self->verbose;
         $e->{callback}->( $self, $e, $dt );
         $e->{triggered} = 1;
     }
@@ -134,8 +169,7 @@ sub run {
                             && $dt->second == $e->{datetime}->second
                         )
                     {
-                        $e->{callback}->( $self );
-                        $e->{triggered} = 1;
+                        $self->_call_event( $e , $dt );
                     }
                 }
             }
@@ -149,7 +183,7 @@ __END__
 
 =head1 NAME
 
-AnyEvent::Cron - The great new AnyEvent::Cron!
+AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on specified time.
 
 =head1 VERSION
 
