@@ -17,7 +17,4 @@ MANIFEST
 META.yml
 README
 t/00-load.t
-t/manifest.t
-t/pod-coverage.t
-t/pod.t
-timer.pl
+eg/simple-cron.pl
