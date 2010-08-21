@@ -213,7 +213,6 @@ Or:
     $cron->add({  
         type => 'interval',
         second => 0 ,
-        triggered => 0,
         callback => sub { 
             warn "SECOND INTERVAL TRIGGERD";
         },

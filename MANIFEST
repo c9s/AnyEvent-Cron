@@ -15,6 +15,6 @@ lib/AnyEvent/Cron.pm
 Makefile.PL
 MANIFEST
 META.yml
-README
+README.md
 t/00-load.t
 eg/simple-cron.pl
