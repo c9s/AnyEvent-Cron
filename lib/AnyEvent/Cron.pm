@@ -201,6 +201,11 @@ Version 0.01
 
     # 00:00 (hour:minute)
     $cron->add("00:00" => sub { warn "zero"; })
+
+        # hour : minute : second 
+        ->add( "*:*:10" => sub { })
+        ->add( "1:*:*" => sub { })
+
         ->add( DateTime->now => sub { warn "datetime now" } )
         ->run();
 
