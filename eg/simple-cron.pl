@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+use AnyEvent::Cron;
 my $cron = AnyEvent::Cron->new( verbose => 1 );
 
 # 00:00 (hour:minute)
