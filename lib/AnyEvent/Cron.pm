@@ -5,7 +5,7 @@ use DateTime;
 use AnyEvent;
 use Any::Moose;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has after =>
     ( is => 'rw' , isa => 'Int' , default => sub { 0 } );
@@ -184,10 +184,6 @@ __END__
 =head1 NAME
 
 AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on specified time.
-
-=head1 VERSION
-
-Version 0.01
 
 =head1 SYNOPSIS
 
