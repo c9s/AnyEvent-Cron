@@ -13,6 +13,31 @@
         ->add( DateTime->now => sub { warn "datetime now" } )
         ->run();
 
+or:
+
+    $cron->add({  
+        type => 'interval',
+        second => 0 ,
+        triggered => 0,
+        callback => sub { 
+            warn "SECOND INTERVAL TRIGGERD";
+        },
+    },{  
+        type => 'interval',
+        hour => DateTime->now->hour , 
+        minute =>  DateTime->now->minute ,
+        callback => sub { 
+            warn "HOUR+MINUTE INTERVAL TRIGGERD";
+        },
+    });
+
+    $cron->add({
+        type => 'datetime' ,
+        callback => sub { warn "DATETIME TRIGGED"  },
+        datetime => (sub { 
+                return DateTime->now->add_duration( DateTime::Duration->new( minutes => 0 ) ); })->()
+        });
+
     my $cv = AnyEvent->condvar;
     $cv->recv;
 
