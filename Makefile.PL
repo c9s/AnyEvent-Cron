@@ -8,5 +8,6 @@ build_requires 'Test::More';
 
 requires 'DateTime';
 requires 'AnyEvent';
+requires 'Any::Moose';
 auto_install;
 WriteAll;
