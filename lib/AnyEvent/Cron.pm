@@ -8,7 +8,7 @@ use Try::Tiny;
 use DateTime::Event::Cron;
 use v5.12;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 
 # map of expiration formats to their respective time in seconds
