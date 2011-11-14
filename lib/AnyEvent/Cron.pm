@@ -159,8 +159,6 @@ AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on 
     my $cron = AnyEvent::Cron->new( 
             verbose => 1,
             debug => 1,
-            after => 1,
-            interval => 1,
             ignore_floating => 1
     );
 
@@ -177,63 +175,12 @@ AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on 
     my $cv = AnyEvent->condvar;
     $cv->recv;
 
-Or:
-
-    $cron->add({  
-        type => 'interval',
-        second => 0 ,
-        callback => sub { 
-            warn "SECOND INTERVAL TRIGGERD";
-        },
-    },{  
-        type => 'interval',
-        hour => DateTime->now->hour , 
-        minute =>  DateTime->now->minute ,
-        callback => sub { 
-            warn "HOUR+MINUTE INTERVAL TRIGGERD";
-        },
-    },{  
-        type => 'interval',
-        hour => DateTime->now->hour ,
-        callback => sub { 
-            warn "HOUR INTERVAL TRIGGERD";
-        },
-    },{  
-        type => 'interval',
-        minute => DateTime->now->minute ,
-        callback => sub { 
-            warn "MINUTE INTERVAL TRIGGERD";
-        },
-    },{
-        type => 'datetime' ,
-        callback => sub { warn "DATETIME TRIGGED"  },
-        datetime => (sub { 
-                # my $dt = DateTime->now->add_duration( DateTime::Duration->new( minutes => 0 ) );
-                my $dt = DateTime->now;
-                # $dt->set_second(0);
-                # $dt->set_nanosecond(0);
-                warn "Next trigger: ", $dt;
-                return $dt; })->()
-    })->run();
-
 
 =head1 METHODS
-
-=head2 add( @events )
 
 =head2 add( "12:36" => sub {     } )
 
 =head2 add( DateTime->now => sub {     } )
-
-=head2 create_interval_event
-
-    $cron->create_interval_event({
-        hour => $hour,
-        minute => $minute,
-        callback => $cb,
-    });
-
-=head2 create_datatime_event
 
 =head1 AUTHOR
 
@@ -244,9 +191,6 @@ Cornelius, C<< <cornelius.howl_at_gmail.com> >>
 Please report any bugs or feature requests to C<bug-anyevent-cron at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=AnyEvent-Cron>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
-
-
-
 
 =head1 SUPPORT
 
