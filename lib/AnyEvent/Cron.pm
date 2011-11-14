@@ -199,14 +199,11 @@ AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on 
             ignore_floating => 1
     );
 
-    # 00:00 (hour:minute)
+                # 00:00 (hour:minute)
     $cron->add("00:00" => sub { warn "zero"; })
-
-        # hour : minute : second 
-        ->add( "*:*:10" => sub { })
-        ->add( "1:*:*" => sub { })
-
-        ->add( DateTime->now => sub { warn "datetime now" } )
+        ->add( '* * * * *' => sub {  } )
+        ->add( '1 seconds' => sub {  } )
+        ->add( '3 days' => sub {  } )
         ->run();
 
     my $cv = AnyEvent->condvar;
