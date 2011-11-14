@@ -64,6 +64,15 @@ sub add {
     } 
     catch {
         given ( $timespec ) {
+            # hour:minute per day
+            when( m{^(\d+):(\d+)$} ) {
+                my ( $hour, $minute ) = ( $1, $2 );
+                $self->add_job({
+                    time => { hour => $hour, minute => $minute },
+                    cb => $cb,
+                    %args,
+                });
+            }
             when( m{^\s*(\d+)\s*(\w+)} ) {
                 my ( $number, $unit ) = ( $1, $2 );
                 my $seconds = $number * $_Expiration_Units{$unit};
@@ -111,6 +120,34 @@ sub _schedule {
         $next_epoch = $now_epoch + $job->{seconds};
         $delay      = $next_epoch - $now_epoch;
         warn "delay:",$delay if $debug;
+    }
+    elsif( $job->{time} ) {
+        my $time = $job->{time};
+        my $now = DateTime->from_epoch( epoch => $now_epoch ); # depends on now
+        my $next = $now->clone;
+        $next->set( %$time );
+
+        # now > the scheduled time
+        if( DateTime->compare( $now, $next ) == 1 ) {
+            if( $time->{month} ) {
+                $next->add( years => 1 );
+            }
+            elsif( $time->{day} ) {
+                $next->add( months => 1 );
+            }
+            elsif( $time->{hour} ) {
+                $next->add( days => 1 );
+            }
+            elsif( $time->{minute} ) {
+                $next->add( hours => 1 );
+            }
+            elsif( $time->{second} ) {
+                $next->add( minutes => 1 );
+            }
+            else {
+                die 'unknown spec';
+            }
+        }
     }
 
     $job->{next}{ $next_epoch } = 1;

@@ -21,8 +21,10 @@ $cron->add( '1 seconds' => sub {
     $cv->end;
 }, name => 'CRON: 1 seconds' , once => 1 );
 
+
 $cron->run();
 
+diag "waiting for recv (2 events)";
 
 $cv->recv;
 
