@@ -49,40 +49,6 @@ has timers => ( is => 'rw', isa => 'ArrayRef' , default => sub { [ ] } );
 
 use Scalar::Util qw(refaddr);
 
-sub create_interval_event {
-    my $self = shift;
-    my $ref  = shift;
-    $ref = {
-        %$ref,
-        type      => 'interval',
-        triggered => 0,
-        };
-    $ref->{name} ||= 'interval-' . refaddr($ref);
-    print "hook interval on: "
-            , join( ':', grep {$_} map { $ref->{$_} } qw(hour minute second) ) 
-            , "\n" 
-            if $self->debug;
-    push @{ $self->events }, $ref;
-}
-
-sub delete {
-    my $self = shift;
-    my $name = shift;
-    my @events = @{ $self->events };
-    $self->events( [ grep { $_->{name} ne $name } @{ $self->events } ] );
-}
-
-sub create_datatime_event {
-    my ( $self, $dt, $cb ) = @_;
-    push @{ $self->events }, {
-        type      => 'datetime',
-        triggered => 0,
-        datetime  => $dt,
-        callback  => $cb,
-        name      => 'datetime-'. refaddr($cb),
-    };
-}
-
 sub add {
     my $self = shift;
     my ( $timespec, $cb , %args ) = @_;
