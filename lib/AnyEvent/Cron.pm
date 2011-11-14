@@ -20,11 +20,6 @@ my %_Expiration_Units = ( map(($_,             1), qw(s second seconds sec)),
                           map(($_,   60*60*24*30), qw(M month months)),
                           map(($_,  60*60*24*365), qw(y year years)) );
 
-has run_after =>
-    is => 'rw', 
-    isa => 'Int', 
-    default => 0;
-
 has interval => 
     ( is => 'rw' , isa => 'Int' , default => sub { 1 } );
 
