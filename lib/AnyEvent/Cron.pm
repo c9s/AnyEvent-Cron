@@ -6,7 +6,7 @@ use AnyEvent;
 use Moose;
 use Try::Tiny;
 use DateTime::Event::Cron;
-use v5.12;
+use v5.10;
 
 our $VERSION = '0.03';
 
