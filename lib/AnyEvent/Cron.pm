@@ -29,9 +29,6 @@ has verbose =>
 has debug =>
     ( is => 'rw' , isa => 'Bool' , default => sub { 0 } );
 
-# TODO:
-has ignore_floating =>
-    ( is => 'rw',  isa => 'Bool' , default => sub { 0 } );
 
 has jobs =>
     traits  => ['Array'],
@@ -194,12 +191,11 @@ AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on 
 =head1 SYNOPSIS
 
     my $cron = AnyEvent::Cron->new( 
-            verbose => 1,
-            debug => 1,
-            ignore_floating => 1
+        verbose => 1,
+        debug => 1,
     );
 
-                # 00:00 (hour:minute)
+    # 00:00 (hour:minute)
     $cron->add("00:00" => sub { warn "zero"; })
         ->add( '* * * * *' => sub {  } )
         ->add( '1 seconds' => sub {  } )
@@ -218,7 +214,7 @@ AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on 
 
 =head1 AUTHOR
 
-Cornelius, C<< <cornelius.howl_at_gmail.com> >>
+Yo-An Lin, C<< <cornelius.howl_at_gmail.com> >>
 
 =head1 BUGS
 
