@@ -212,13 +212,16 @@ AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on 
 
 =head1 METHODS
 
-=head2 add( "12:36" => sub {     }, debug=>1, name=>'foo job', )
+=head2 add( "12:36" => sub {  my ($cv, $job) = @_;   }, debug=>1, name=>'foo job', foo=>$bar, )
+                          $cv is the AnyEvent->condvar
+                          $job is a hashref
 
 =head2 add( DateTime->now => sub {     } )
 
-=head3 Addition args for add
+=head3 Addition args for add became args of $job passed to callback
                           debug (bool)
                           name (default is timespec)
+                          [and other] 
 
 =head1 AUTHOR
 
