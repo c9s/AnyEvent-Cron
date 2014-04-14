@@ -56,6 +56,7 @@ sub add {
         $self->add_job({
             event => $cron_event,
             cb => $cb,
+            name=>$timespec,
             %args
         });
     } 
@@ -67,6 +68,7 @@ sub add {
                 $self->add_job({
                     time => { hour => $hour, minute => $minute },
                     cb => $cb,
+                    name=>$timespec,
                     %args,
                 });
             }
@@ -76,6 +78,7 @@ sub add {
                 $self->add_job({
                     seconds => $seconds,
                     cb      => $cb,
+                    name=>$timespec,
                     %args
                 });
                 # $self->create_interval_event( { second => $seconds, callback => $cb } );
@@ -164,6 +167,7 @@ sub _schedule {
                 eval { $job->{cb}->( $self->{_cv}, $job ); 1 }
                     or warn $@ || 'Unknown error';
                 delete $job->{running};
+                delete $job->{next}{ $next_epoch };
                 print STDERR "Finished job '$name'\n"
                     if $debug;
             }
@@ -208,9 +212,13 @@ AnyEvent::Cron - Crontab in AnyEvent! provide an interface to register event on 
 
 =head1 METHODS
 
-=head2 add( "12:36" => sub {     } )
+=head2 add( "12:36" => sub {     }, debug=>1, name=>'foo job', )
 
 =head2 add( DateTime->now => sub {     } )
+
+=head3 Addition args for add
+                          debug (bool)
+                          name (default is timespec)
 
 =head1 AUTHOR
 
