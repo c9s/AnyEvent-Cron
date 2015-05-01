@@ -74,6 +74,7 @@ sub add {
             }
             when( m{^\s*(\d+)\s*(\w+)} ) {
                 my ( $number, $unit ) = ( $1, $2 );
+                continue unless $_Expiration_Units{$unit};
                 my $seconds = $number * $_Expiration_Units{$unit};
                 $self->add_job({
                     seconds => $seconds,
